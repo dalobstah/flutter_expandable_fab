@@ -60,7 +60,7 @@ class ExpandableFabOverlayStyle {
 @immutable
 class ExpandableFab extends StatefulWidget {
   /// The location of the ExpandableFab on the screen.
-  static final FloatingActionButtonLocation location = _ExpandableFabLocation();
+  static final FloatingActionButtonLocation location = ExpandableFabLocation();
 
   const ExpandableFab({
     Key? key,
@@ -130,8 +130,7 @@ class ExpandableFab extends StatefulWidget {
   State<ExpandableFab> createState() => ExpandableFabState();
 }
 
-class ExpandableFabState extends State<ExpandableFab>
-    with SingleTickerProviderStateMixin {
+class ExpandableFabState extends State<ExpandableFab> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _expandAnimation;
   late final FloatingActionButtonBuilder _openButtonBuilder;
@@ -192,7 +191,7 @@ class ExpandableFabState extends State<ExpandableFab>
 
   @override
   Widget build(BuildContext context) {
-    final location = ExpandableFab.location as _ExpandableFabLocation;
+    final location = ExpandableFab.location as ExpandableFabLocation;
     Offset? offset;
     Widget? cache;
     return ValueListenableBuilder<ScaffoldPrelayoutGeometry?>(
@@ -207,10 +206,8 @@ class ExpandableFabState extends State<ExpandableFab>
         } else {
           x = -kFloatingActionButtonMargin - geometry.minInsets.left;
         }
-        final bottomContentHeight =
-            geometry.scaffoldSize.height - geometry.contentBottom;
-        final y = kFloatingActionButtonMargin +
-            math.max(geometry.minViewPadding.bottom, bottomContentHeight);
+        final bottomContentHeight = geometry.scaffoldSize.height - geometry.contentBottom;
+        final y = kFloatingActionButtonMargin + math.max(geometry.minViewPadding.bottom, bottomContentHeight);
         if (offset != Offset(x, y)) {
           offset = Offset(x, y);
           cache = _buildButtons(offset!);
@@ -226,9 +223,7 @@ class ExpandableFabState extends State<ExpandableFab>
     return GestureDetector(
       onTap: () => toggle(),
       child: Stack(
-        alignment: widget.pos == ExpandableFabPos.right
-            ? Alignment.bottomRight
-            : Alignment.bottomLeft,
+        alignment: widget.pos == ExpandableFabPos.right ? Alignment.bottomRight : Alignment.bottomLeft,
         children: [
           Container(),
           if (blur != null)
@@ -274,8 +269,7 @@ class ExpandableFabState extends State<ExpandableFab>
                   opacity: _open ? 1.0 : 0.0,
                   curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
                   duration: widget.duration,
-                  child: _closeButtonBuilder.builder(
-                      context, toggle, _expandAnimation),
+                  child: _closeButtonBuilder.builder(context, toggle, _expandAnimation),
                 ),
                 _buildTapToOpenFab(),
               ],
@@ -297,8 +291,7 @@ class ExpandableFabState extends State<ExpandableFab>
     if (widget.pos == ExpandableFabPos.right) {
       totalOffset += widget.childrenOffset + Offset(buttonOffset, buttonOffset);
     } else {
-      totalOffset += Offset(-widget.childrenOffset.dx - buttonOffset,
-          widget.childrenOffset.dy + buttonOffset);
+      totalOffset += Offset(-widget.childrenOffset.dx - buttonOffset, widget.childrenOffset.dy + buttonOffset);
     }
     for (var i = 0; i < count; i++) {
       final double dir, dist;
@@ -361,13 +354,11 @@ class ExpandableFabState extends State<ExpandableFab>
   }
 }
 
-class _ExpandableFabLocation extends StandardFabLocation {
-  final ValueNotifier<ScaffoldPrelayoutGeometry?> scaffoldGeometry =
-      ValueNotifier(null);
+class ExpandableFabLocation extends StandardFabLocation {
+  final ValueNotifier<ScaffoldPrelayoutGeometry?> scaffoldGeometry = ValueNotifier(null);
 
   @override
-  double getOffsetX(
-      ScaffoldPrelayoutGeometry scaffoldGeometry, double adjustment) {
+  double getOffsetX(ScaffoldPrelayoutGeometry scaffoldGeometry, double adjustment) {
     Future.microtask(() {
       this.scaffoldGeometry.value = scaffoldGeometry;
     });
@@ -375,8 +366,7 @@ class _ExpandableFabLocation extends StandardFabLocation {
   }
 
   @override
-  double getOffsetY(
-      ScaffoldPrelayoutGeometry scaffoldGeometry, double adjustment) {
+  double getOffsetY(ScaffoldPrelayoutGeometry scaffoldGeometry, double adjustment) {
     return -scaffoldGeometry.snackBarSize.height;
   }
 }
